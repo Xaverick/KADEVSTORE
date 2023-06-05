@@ -31,7 +31,7 @@ app.use('/category', category);
 //     res.render('./campground/home')
 // })
 
-
-app.listen(4000, () =>{
+const port = process.env.PORT || 3000;
+app.listen(port, () =>{
     console.log("server strated")
 })
