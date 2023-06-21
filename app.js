@@ -1,13 +1,19 @@
 const express = require("express")
 const app = express();
-const home = require("./routes/homeroute")
+const product = require("./routes/productroute")
 const category = require("./routes/categoryroute")
+const user = require("./routes/authroute")
 const session = require('express-session');
 require('dotenv').config();
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require('cors')
+const cookieParser = require('cookie-parser')
+const expressError = require("./utils/expressError")
 
+
+
+flash = require('express-flash')
 
 const MongoDBStore = require("connect-mongo");
 const dbURL = process.env.Db_URL || 'mongodb://127.0.0.1:27017/yelp-camp';
@@ -42,30 +48,30 @@ const sessionparam = {
         maxAge: 1000 * 60 * 60 * 24 * 7
     }
 }
-
-
+app.use(flash());
+app.use(cookieParser());
 app.use(session(sessionparam));
-app.use(cors());
+app.use(cors({credentials:true, origin:"http://localhost:3000"}));
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 
-app.use('/', home);
+
+app.use('/', user);
+app.use('/products', product);
 app.use('/category', category);
 
-// app.use('/product', productRoutes)
-// app.use('/category', categotyRoutes)
+app.all("*", (req, res, next) => {
+    next(new expressError('page not found', 404));
+})
 
+app.use((err, req, res, next) => {
+    const { statusCode = 500 } = err;
+    if(!err.message) err.message = "Something went wrong"
+    console.log("error")
+})
 
-// app.get('/', (req, res) => {
-//     res.render('./campground/home')
-// })
-
-<<<<<<< HEAD
-const port = 
-app.listen(4000, () =>{
-=======
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 app.listen(port, () =>{
->>>>>>> 1188b3190f40801a62248d330e9318c6fad7b0db
+
     console.log("server strated")
 })
