@@ -51,7 +51,7 @@ const sessionparam = {
 app.use(flash());
 app.use(cookieParser());
 app.use(session(sessionparam));
-app.use(cors({credentials:true, origin:"http://localhost:3000"}));
+app.use(cors({credentials:true, origin:"https://kadevstore-frontend.onrender.com"}));
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 
